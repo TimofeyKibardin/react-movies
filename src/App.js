@@ -7,19 +7,28 @@ export default class App extends React.Component {
   state = {
     movieCollection: [],
     error: '',
-    defaultMovieFilter: 'Naruto'
+    defaultMovieFilter: 'The Godfather'
   }
 
   fetchData = async () => {
     try {
+      const queryString = new URLSearchParams({
+        apikey: process.env.REACT_APP_MOVIES_API_KEY,
+        s: this.state.defaultMovieFilter,
+        plot: 'full'
+      }).toString();
+
       const response = await fetch(
-        `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_MOVIES_API_KEY}&s=${this.state.defaultMovieFilter}`
+        `http://www.omdbapi.com/?${queryString}`
       );
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+
       const data = await response.json();
       this.setState({movieCollection: data.Search });
+
     } catch (error) {
       this.setState({ error: error.message });
     }
@@ -27,7 +36,6 @@ export default class App extends React.Component {
 
   componentDidMount() {
     this.fetchData();
-    console.log('Рендер')
   }
 
   render() {
@@ -36,7 +44,7 @@ export default class App extends React.Component {
     return (
       <React.Fragment>
         <Header />
-        <Main movies={movieCollection} />
+        <Main movieCollection={movieCollection} />
         <Footer />
       </React.Fragment>
     )

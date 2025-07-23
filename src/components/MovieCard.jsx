@@ -1,0 +1,63 @@
+function MovieCard({ movie }) {
+  const cardStyle = {
+    backgroundColor: '#fff',
+    borderRadius: '12px',
+    padding: '1rem',
+    color: '#333',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    display: 'flex',
+    flexDirection: 'column',
+    transition: 'transform 0.2s ease',
+    overflow: 'hidden',
+    height: '100%' // карточка растягивается до высоты grid-ячейки
+  };
+
+  const imageWrapperStyle = {
+    width: '100%',
+    height: '350px',
+    overflow: 'hidden',
+    borderRadius: '8px',
+    marginBottom: '1rem',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5'
+  };
+
+  const imageStyle = {
+    maxWidth: '100%',
+    maxHeight: '100%',
+    objectFit: 'contain',
+    objectPosition: 'center',
+  };
+
+  const titleStyle = {
+    fontSize: '1.1rem',
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
+    textAlign: 'center'
+  };
+
+  const detailStyle = {
+    fontSize: '0.9rem',
+    textAlign: 'center',
+    color: '#666'
+  };
+
+  return (
+    <div style={cardStyle}>
+      <div style={imageWrapperStyle}>
+        <img
+          src={movie.Poster !== 'N/A' ? movie.Poster : '../assets/placeholder.png}'}
+          alt={movie.Title}
+          style={imageStyle}
+        />
+      </div>
+      <div style={titleStyle}>{movie.Title}</div>
+      <div style={detailStyle}>{movie.Year}</div>
+      <div style={detailStyle}>IMDb: {movie.imdbRating || '-'}</div>
+    </div>
+  );
+}
+
+export { MovieCard };
