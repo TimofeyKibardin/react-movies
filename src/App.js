@@ -7,7 +7,7 @@ export default class App extends React.Component {
   state = {
     movieCollection: [],
     error: '',
-    defaultMovieFilter: 'The Godfather'
+    defaultMovieFilter: 'Code Geass'
   }
 
   fetchData = async () => {

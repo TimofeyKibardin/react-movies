@@ -1,5 +1,32 @@
+import placeholderImage from '../assets/placeholder.png';
+
 function MovieCard({ movie }) {
-  const cardStyle = {
+    const posterSrc = movie.Poster !== 'N/A' ? movie.Poster : placeholderImage;
+
+    const handleImageError = (e) => {
+        e.target.src = placeholderImage;
+    };
+
+    return (
+        <div style={cardStyle}>
+            <div style={imageWrapperStyle}>
+                <img
+                    src={posterSrc}
+                    alt={movie.Title}
+                    style={imageStyle}
+                />
+            </div>
+            <div style={titleStyle}>{movie.Title}</div>
+            <div style={detailStyle}>{movie.Year}</div>
+            <div style={detailStyle}>IMDb: {movie.imdbRating || '-'}</div>
+        </div>
+  );
+}
+
+export { MovieCard };
+
+
+const cardStyle = {
     backgroundColor: '#fff',
     borderRadius: '12px',
     padding: '1rem',
@@ -12,7 +39,7 @@ function MovieCard({ movie }) {
     height: '100%' // карточка растягивается до высоты grid-ячейки
   };
 
-  const imageWrapperStyle = {
+const imageWrapperStyle = {
     width: '100%',
     height: '350px',
     overflow: 'hidden',
@@ -22,42 +49,24 @@ function MovieCard({ movie }) {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f5f5f5'
-  };
+};
 
-  const imageStyle = {
+const imageStyle = {
     maxWidth: '100%',
     maxHeight: '100%',
     objectFit: 'contain',
     objectPosition: 'center',
-  };
+};
 
-  const titleStyle = {
+const titleStyle = {
     fontSize: '1.1rem',
     fontWeight: 'bold',
     marginBottom: '0.5rem',
     textAlign: 'center'
-  };
+};
 
-  const detailStyle = {
+const detailStyle = {
     fontSize: '0.9rem',
     textAlign: 'center',
     color: '#666'
-  };
-
-  return (
-    <div style={cardStyle}>
-      <div style={imageWrapperStyle}>
-        <img
-          src={movie.Poster !== 'N/A' ? movie.Poster : '../assets/placeholder.png}'}
-          alt={movie.Title}
-          style={imageStyle}
-        />
-      </div>
-      <div style={titleStyle}>{movie.Title}</div>
-      <div style={detailStyle}>{movie.Year}</div>
-      <div style={detailStyle}>IMDb: {movie.imdbRating || '-'}</div>
-    </div>
-  );
-}
-
-export { MovieCard };
+};
