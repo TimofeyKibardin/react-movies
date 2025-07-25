@@ -3,10 +3,6 @@ import placeholderImage from '../assets/placeholder.png';
 function MovieCard({ movie }) {
     const posterSrc = movie.Poster !== 'N/A' ? movie.Poster : placeholderImage;
 
-    const handleImageError = (e) => {
-        e.target.src = placeholderImage;
-    };
-
     return (
         <div style={cardStyle}>
             <div style={imageWrapperStyle}>

@@ -1,10 +1,16 @@
 import { MovieList } from '../components/MovieList'
+import { Preloader } from '../components/Preloader';
+import { Search } from '../components/Search';
 
-function Main ({ movieCollection = [] }) {
-  console.log(JSON.stringify(movieCollection));
+function Main ({ movieCollection = [], onHandleKeyDown }) {
     return (
     <main className="container main">
-        <MovieList movieCollection={movieCollection}/>
+      <Search onHandleKeyDown={onHandleKeyDown} />
+      {
+        movieCollection.length ? (
+          <MovieList movieCollection={movieCollection}/>
+        ) : <Preloader />
+      }
     </main>
   );
 }
