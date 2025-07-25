@@ -13,8 +13,8 @@ function MovieCard({ movie }) {
                 />
             </div>
             <div style={titleStyle}>{movie.Title}</div>
-            <div style={detailStyle}>{movie.Year}</div>
-            <div style={detailStyle}>IMDb: {movie.imdbRating || '-'}</div>
+            <div style={detailStyle}>{movie.Type}</div>
+            <div style={detailStyle}>Year: {movie.Year || '-'}</div>
         </div>
   );
 }

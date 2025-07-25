@@ -11,10 +11,11 @@ function MovieList({ movieCollection = [] }) {
   
     return (
         <div style={style}>
-            {
-                sortedMovies
-                    .filter(movie => !!movie.imdbID)
-                    .map(movie => <MovieCard key={movie.imdbID} movie={movie} />)
+            {sortedMovies.length ?
+                    (sortedMovies
+                        .filter(movie => !!movie.imdbID)
+                        .map(movie => <MovieCard key={movie.imdbID} movie={movie} />))
+                    : <h4>Nothing found...</h4>
             }
         </div>
     );

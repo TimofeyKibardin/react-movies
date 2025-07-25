@@ -7,10 +7,30 @@ export default class App extends React.Component {
   state = {
     movieCollection: [],
     error: '',
-    movieFilter: 'Code Geass'
+    movieFilter: '',
+    movieType: '',
+    loading: true
   }
 
-  fetchData = async (title = this.state.movieFilter) => {
+  componentDidMount() {
+    const savedFilter = localStorage.getItem('lastSearch');
+      if (!!savedFilter && savedFilter.trim() !== '') {
+        this.setState({ movieFilter: savedFilter }, () => {
+          this.fetchData(savedFilter, this.state.movieType);
+        });
+      } else {
+        this.fetchData('Code Geass');
+      }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.movieFilter !== this.state.movieFilter) {
+        localStorage.setItem('lastSearch', this.state.movieFilter);
+    }
+  }
+
+  fetchData = async (title = this.state.movieFilter, type = this.state.movieType) => {
+    this.setState({loading: true});
     const trimmedTitle = title.trim();
     if (trimmedTitle === '') {
       this.setState({ movieCollection: [], error: 'Введите название фильма' });
@@ -20,7 +40,8 @@ export default class App extends React.Component {
     try {
       const queryString = new URLSearchParams({
         apikey: process.env.REACT_APP_MOVIES_API_KEY,
-        s: trimmedTitle
+        s: trimmedTitle,
+        type: type
       }).toString();
 
       console.log(queryString);
@@ -36,9 +57,9 @@ export default class App extends React.Component {
       const data = await response.json();
       
       if (data.Response === 'False') {
-        this.setState({ movieCollection: [], error: data.Error });
+        this.setState({ movieCollection: [], loading: false });
       } else {
-        this.setState({ movieCollection: data.Search, error: '' });
+        this.setState({ movieCollection: data.Search, loading: false });
       }
 
     } catch (error) {
@@ -48,21 +69,30 @@ export default class App extends React.Component {
 
   handleKeyDown = (query) => {
     this.setState({movieFilter: query}, () => {
-      this.fetchData(query);
+      this.fetchData(query, this.state.movieType);
     });
   }
 
-  componentDidMount() {
-    this.fetchData();
+  handleTypeChange = (type) => {
+    this.setState({ movieType: type }, () => {
+      this.fetchData(this.state.movieFilter, type);
+    });
   }
 
+
   render() {
-    const { movieCollection } = this.state;
+    const { movieCollection, movieType, loading } = this.state;
 
     return (
       <React.Fragment>
         <Header />
-        <Main movieCollection={movieCollection} onHandleKeyDown={this.handleKeyDown} />
+        <Main
+          movieCollection={movieCollection}
+          selectedType={movieType}
+          onHandleKeyDown={this.handleKeyDown}
+          onTypeChange={this.handleTypeChange}
+          loading={loading}
+        />
         <Footer />
       </React.Fragment>
     )

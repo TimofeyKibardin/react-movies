@@ -2,14 +2,19 @@ import { MovieList } from '../components/MovieList'
 import { Preloader } from '../components/Preloader';
 import { Search } from '../components/Search';
 
-function Main ({ movieCollection = [], onHandleKeyDown }) {
+function Main ({ movieCollection = [], selectedType, onHandleKeyDown, onTypeChange, loading }) {
+
     return (
     <main className="container main">
-      <Search onHandleKeyDown={onHandleKeyDown} />
+      <Search
+          onHandleKeyDown={onHandleKeyDown}
+          onTypeChange={onTypeChange}
+          selectedType={selectedType}
+      />
       {
-        movieCollection.length ? (
-          <MovieList movieCollection={movieCollection}/>
-        ) : <Preloader />
+          loading ?
+            <Preloader />
+            : <MovieList movieCollection={movieCollection}/>
       }
     </main>
   );
