@@ -2,6 +2,7 @@ import React from 'react';
 import { Header } from './layout/Header'
 import { Footer } from './layout/Footer'
 import { Main } from './layout/Main'
+import movies_offline from './movies_offline.json' 
 
 export default class App extends React.Component {
   state = {
@@ -31,7 +32,7 @@ export default class App extends React.Component {
 
   fetchData = async (title = this.state.movieFilter, type = this.state.movieType) => {
     this.setState({loading: true});
-    const trimmedTitle = title.trim();
+    const trimmedTitle = title.trim().toLowerCase();
     if (trimmedTitle === '') {
       this.setState({ movieCollection: [], error: 'Введите название фильма' });
       return;
@@ -63,9 +64,58 @@ export default class App extends React.Component {
       }
 
     } catch (error) {
-      this.setState({ error: error.message });
+      // this.setState({ error: error.message });
+      console.warn('Ошибка запроса, пробуем подгрузить локальные данные...', error);
+
+      try {
+        const allData = Array.isArray(movies_offline.Search)
+          ? movies_offline.Search
+          : Array.isArray(movies_offline)
+            ? movies_offline
+            : [];
+
+        const trimmedTitle = title.trim().toLowerCase();
+
+        const filtered = allData.filter((movie) => {
+          const titleMatch = movie.Title?.toLowerCase().includes(trimmedTitle);
+          const typeMatch = type ? movie.Type === type : true;
+          return titleMatch && typeMatch;
+        });
+
+        console.log('Filtered:', filtered);
+
+        this.setState({
+          movieCollection: filtered,
+          loading: false,
+        });
+      } catch (fallbackError) {
+        console.warn('Ошибка загрузки локального файла:', fallbackError);
+        this.setState({ movieCollection: [], loading: false});
+      }
     }
   }
+  
+  exportToFile = () => {
+    const { movieCollection } = this.state;
+
+    if (!movieCollection || movieCollection.length === 0) {
+      alert("Нет данных для экспорта");
+      return;
+    }
+
+    const blob = new Blob([JSON.stringify(movieCollection, null, 2)], {
+      type: "application/json",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = `movies_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+
+    URL.revokeObjectURL(url);
+  };
 
   handleKeyDown = (query) => {
     this.setState({movieFilter: query}, () => {
@@ -91,6 +141,7 @@ export default class App extends React.Component {
           selectedType={movieType}
           onHandleKeyDown={this.handleKeyDown}
           onTypeChange={this.handleTypeChange}
+          onExport={this.exportToFile}
           loading={loading}
         />
         <Footer />
