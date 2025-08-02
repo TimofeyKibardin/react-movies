@@ -1,10 +1,16 @@
 import { MovieCard } from './MovieCard'
+import { ApiItem } from '../types/ApiItem';
 
-function MovieList({ movieCollection = [] }) {
+// Пропсы компонента
+interface MovieListProps {
+    movieCollection: ApiItem[];
+}
+
+export function MovieList({ movieCollection }: MovieListProps) {
     // Сортировка по году (по убыванию: от новых к старым)
     const sortedMovies = [...movieCollection].sort((a, b) => {
-        const yearA = parseInt(a.Year) || 0;
-        const yearB = parseInt(b.Year) || 0;
+        const yearA = parseInt(a.Year ?? '0');
+        const yearB = parseInt(b.Year ?? '0');
         return yearB - yearA;
     });
 
@@ -21,9 +27,8 @@ function MovieList({ movieCollection = [] }) {
     );
 }
 
-export { MovieList };
 
-const style = {
+const style: React.CSSProperties = {
     display: 'grid', // элементы внутри будут располагаться по сетке
     gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 240px))',
     gap: '2rem', // Отступ между ячейками сетки (и по вертикали, и по горизонтали).

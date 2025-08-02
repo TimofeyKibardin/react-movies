@@ -1,7 +1,14 @@
 import placeholderImage from '../assets/placeholder.png';
+import { Movie } from '../types/Movie';
 
-function MovieCard({ movie }) {
-    const posterSrc = movie.Poster !== 'N/A' ? movie.Poster : placeholderImage;
+interface MovieCardProps {
+  movie: Movie;
+}
+
+export function MovieCard({ movie }: MovieCardProps) {
+    const posterSrc: string = movie.Poster && movie.Poster !== 'N/A'
+        ? movie.Poster
+        : placeholderImage;
 
     return (
         <div style={cardStyle}>
@@ -19,10 +26,8 @@ function MovieCard({ movie }) {
   );
 }
 
-export { MovieCard };
 
-
-const cardStyle = {
+const cardStyle: React.CSSProperties = {
     backgroundColor: '#fff',
     borderRadius: '12px',
     padding: '1rem',
@@ -35,7 +40,7 @@ const cardStyle = {
     height: '100%' // карточка растягивается до высоты grid-ячейки
   };
 
-const imageWrapperStyle = {
+const imageWrapperStyle: React.CSSProperties = {
     width: '100%',
     height: '350px',
     overflow: 'hidden',
@@ -47,21 +52,21 @@ const imageWrapperStyle = {
     backgroundColor: '#f5f5f5'
 };
 
-const imageStyle = {
+const imageStyle: React.CSSProperties = {
     maxWidth: '100%',
     maxHeight: '100%',
     objectFit: 'contain',
     objectPosition: 'center',
 };
 
-const titleStyle = {
+const titleStyle: React.CSSProperties = {
     fontSize: '1.1rem',
     fontWeight: 'bold',
     marginBottom: '0.5rem',
     textAlign: 'center'
 };
 
-const detailStyle = {
+const detailStyle: React.CSSProperties = {
     fontSize: '0.9rem',
     textAlign: 'center',
     color: '#666'
